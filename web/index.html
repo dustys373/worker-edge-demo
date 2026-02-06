@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Cloudflare Worker Edge Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      max-width: 720px;
+      margin: 40px auto;
+      padding: 0 16px;
+      line-height: 1.6;
+    }
+    h1 {
+      margin-bottom: 0;
+    }
+    .sub {
+      color: #555;
+      margin-top: 4px;
+    }
+    button {
+      padding: 10px 16px;
+      margin: 8px 0;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 12px;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+    .ok {
+      color: #0a7;
+    }
+    .err {
+      color: #c00;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Cloudflare Worker Edge Demo</h1>
+  <div class="sub">
+    Static site (Cloudflare Pages) → Edge Worker → KV
+  </div>
+
+  <hr />
+
+  <h2>Health Check</h2>
+  <button onclick="checkHealth()">GET /health</button>
+  <pre id="health"></pre>
+
+  <h2>KV Persistence</h2>
+  <button onclick="incrementKV()">GET /kv-test</button>
+  <pre id="kv"></pre>
+
+  <script>
+    // 🔧 CHANGE THIS if you want staging instead
+    const API_BASE = "https://my-worker.dustys-3773.workers.dev";
+
+    async function checkHealth() {
+      const el = document.getElementById("health");
+      el.textContent = "Loading...";
+      try {
+        const res = await fetch(`${API_BASE}/health`);
+        const json = await res.json();
+        el.textContent = JSON.stringify(json, null, 2);
+        el.className = "ok";
+      } catch (err) {
+        el.textContent = err.toString();
+        el.className = "err";
+      }
+    }
+
+    async function incrementKV() {
+      const el = document.getElementById("kv");
+      el.textContent = "Loading...";
+      try {
+        const res = await fetch(`${API_BASE}/kv-test`);
+        const json = await res.json();
+        el.textContent = JSON.stringify(json, null, 2);
+        el.className = "ok";
+      } catch (err) {
+        el.textContent = err.toString();
+        el.className = "err";
+      }
+    }
+  </script>
+
+</body>
+</html>
+

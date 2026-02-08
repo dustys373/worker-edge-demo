@@ -1,5 +1,5 @@
 {
-  "name": "my-worker",
+  "name": "worker-edge-demo",
   "main": "src/index.ts",
   "account_id": "f80f1ca06fe21bda3c7d5ebb25e688f6",
   "compatibility_date": "2026-02-08",

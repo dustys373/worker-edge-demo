@@ -14,17 +14,22 @@ permissions:
 
 jobs:
   deploy_staging:
+    name: Deploy staging
     runs-on: ubuntu-latest
     environment: staging
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Deploy staging
         run: |
@@ -32,23 +37,35 @@ jobs:
             --var VERSION=${{ github.ref_name }} \
             --var GIT_SHA=${{ github.sha }}
         env:
+          # Prevent Wrangler from prompting in CI
+          WRANGLER_SEND_METRICS: "false"
+
+          # Auth for Wrangler (MUST be set in GitHub)
+          # Put these in:
+          #   Settings -> Environments -> staging -> Secrets
+          # (or repo-level Secrets if you remove "environment: staging")
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
 
   deploy_production:
+    name: Deploy production
     needs: deploy_staging
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     environment: production
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: "npm"
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
       - name: Deploy production
         run: |
@@ -56,6 +73,10 @@ jobs:
             --var VERSION=${{ github.ref_name }} \
             --var GIT_SHA=${{ github.sha }}
         env:
+          # Prevent Wrangler from prompting in CI
+          WRANGLER_SEND_METRICS: "false"
+
+          # Put these in:
+          #   Settings -> Environments -> production -> Secrets
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-

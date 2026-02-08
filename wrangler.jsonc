@@ -1,26 +1,16 @@
 {
-  // Base defaults
   "name": "my-worker",
   "main": "src/index.ts",
   "account_id": "f80f1ca06fe21bda3c7d5ebb25e688f6",
   "compatibility_date": "2026-02-08",
 
-  // If you use modules syntax, leave this as-is.
-  // If your entry file is different, change "main" to match your repo.
-  // Example alternatives: "src/worker.ts", "src/index.js"
-
   "env": {
     "staging": {
-      // This matches your log: my-worker-staging
       "name": "my-worker-staging",
-
-      // These match your log bindings
       "vars": {
         "ENV": "staging",
         "APP_NAME": "my-worker"
       },
-
-      // IMPORTANT: binding name MUST be APP_KV (your code/log expects env.APP_KV)
       "kv_namespaces": [
         {
           "binding": "APP_KV",
@@ -28,33 +18,12 @@
         }
       ]
     },
-
     "production": {
       "name": "my-worker",
-
       "vars": {
         "ENV": "production",
         "APP_NAME": "my-worker"
       },
-
-      "kv_namespaces": [
-        {
-          "binding": "APP_KV",
-          "id": "b142c6c316d54b00a50d7d0a586bd01d"
-        }
-      ]
-    }
-  }
-}
-
-    "production": {
-      "name": "my-worker",
-
-      "vars": {
-        "ENV": "production",
-        "APP_NAME": "my-worker"
-      },
-
       "kv_namespaces": [
         {
           "binding": "APP_KV",
